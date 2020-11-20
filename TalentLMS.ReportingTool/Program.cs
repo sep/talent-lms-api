@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using CommandLine;
-using Refit;
 using TalentLMS.Api;
 
 namespace TalentLMSReporting
@@ -16,12 +14,8 @@ namespace TalentLMSReporting
                .MapResult(
                     (CourseProgressOptions opts) =>
                     {
-                        var refitSettings = new RefitSettings {
-                            AuthorizationHeaderValueGetter = () => Task.FromResult(AuthHeader(opts.ApiKey))
-                        };
-
-                        var coursesApi = RestService.For<ICourses>(opts.ServerUri, refitSettings);
-                        var runner = new Runner(Console.Out, coursesApi);
+                        var api = new Api(opts.ServerUri, opts.ApiKey);
+                        var runner = new Runner(Console.Out, api.Courses);
 
                         return runner.CourseProgress(opts.CourseId);
                     },
@@ -39,8 +33,6 @@ namespace TalentLMSReporting
                 return Task.FromResult(ExitCode.GeneralError);
             }
 
-            static string AuthHeader(string apiKey) => Base64($"{apiKey}:");
-            static string Base64(string input) => Convert.ToBase64String(Encoding.UTF8.GetBytes(input));
         }
     }
 
