@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+
+    <PackageId>TalentLMS.Api</PackageId>
+    <Version>0.1.0</Version>
+    <Description>Strongly-typed RESTful client for the TalentLMS API (https://www.talentlms.com).</Description>
+    <Authors>Jon Fuller</Authors>
+    <PackageTags>TalentLMS Talent LMS REST refit</PackageTags>
+    <PackageProjectUrl>https://github.com/sep/talent-lms-api</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Refit" Version="5.2.1" />
+  </ItemGroup>
+
+</Project>
