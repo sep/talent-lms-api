@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
 
+    <PackageOutputPath>./nupkg</PackageOutputPath>
     <PackageId>TalentLMS.Api</PackageId>
     <Version>0.1.0</Version>
     <Description>Strongly-typed RESTful client for the TalentLMS API (https://www.talentlms.com).</Description>
