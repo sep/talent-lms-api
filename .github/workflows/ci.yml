@@ -1,0 +1,54 @@
+name: talent-lms-api
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  create:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.100
+
+    - name: Install dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build TalentLMS.Api/TalentLMS.Api.csproj
+
+    - name: Pack
+      run: dotnet pack TalentLMS.Api/TalentLMS.Api.csproj --configuration=Release
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: nupkg
+        path: TalentLMS.Api/nupkg/**/*.nupkg
+
+  release:
+    name: Release
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/release-')
+
+    steps:
+    - name: Setup NuGet.exe for use with actions
+      uses: NuGet/setup-nuget@v1.0.2
+      with:
+        nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: nupkg
+
+    - name: Publish
+      run: nuget push /**/*.nupkg -Source https://www.nuget.org
