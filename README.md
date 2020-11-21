@@ -6,8 +6,8 @@ This repository contains 2 projects:
 # API
 
 [![Build](https://github.com/sep/talent-lms-api/workflows/talent-lms-api/badge.svg?branch=master)](https://github.com/sep/talent-lms-api/actions)
-[![Version](https://img.shields.io/nuget/v/YoutubeExplode.svg)](https://nuget.org/packages/TalentLMS.Api)
-[![Downloads](https://img.shields.io/nuget/dt/YoutubeExplode.svg)](https://nuget.org/packages/TalentLMS.Api)
+[![Version](https://img.shields.io/nuget/v/TalentLMS.API.svg)](https://nuget.org/packages/TalentLMS.Api)
+[![Downloads](https://img.shields.io/nuget/dt/TalentLMS.API.svg)](https://nuget.org/packages/TalentLMS.Api)
 
 The official TalentLMS API documentation can be found here: https://www.talentlms.com/pages/docs/TalentLMS-API-Documentation.pdf
 
