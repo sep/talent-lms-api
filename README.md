@@ -1,9 +1,13 @@
 This repository contains 2 projects:
 
-1 - a strongly typed RESTful client for the TalentLMS API (https://www.talentlms.com)
-2 - a "swiss army knife" of tools and automations for use with TalentLMS.
+1. [API](#API) a strongly typed RESTful client for the TalentLMS API (https://www.talentlms.com)
+1. [Tools](#Tools) a "swiss army knife" of tools and automations for use with TalentLMS.
 
 # API
+
+[![Build](https://github.com/sep/talent-lms-api/workflows/talent-lms-api/badge.svg?branch=master)](https://github.com/sep/talent-lms-api/actions)
+[![Version](https://img.shields.io/nuget/v/YoutubeExplode.svg)](https://nuget.org/packages/TalentLMS.Api)
+[![Downloads](https://img.shields.io/nuget/dt/YoutubeExplode.svg)](https://nuget.org/packages/TalentLMS.Api)
 
 The official TalentLMS API documentation can be found here: https://www.talentlms.com/pages/docs/TalentLMS-API-Documentation.pdf
 
