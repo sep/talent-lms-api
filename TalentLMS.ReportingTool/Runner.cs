@@ -14,13 +14,26 @@ namespace TalentLMSReporting
     {
         private readonly TextWriter _stdOut;
         private readonly ICourses _coursesApi;
+        private readonly IUsers _usersApi;
 
-        public Runner(TextWriter stdOut, ICourses coursesApi)
+        public Runner(TextWriter stdOut, ICourses coursesApi, IUsers usersApi)
         {
             _stdOut = stdOut;
             _coursesApi = coursesApi;
+            _usersApi = usersApi;
         }
 
+        public async Task<ExitCode> Users()
+        {
+            var users = await _usersApi.All();
+
+            using (var csv = new CsvWriter(_stdOut, CultureInfo.CurrentUICulture))
+            {
+                csv.WriteHeader(users.GetType().GetGenericArguments().Single());
+                await csv.WriteRecordsAsync(users);
+            }
+            return ExitCode.Success;
+        }
         public async Task<ExitCode> CourseProgress(string courseId)
         {
             var course = await _coursesApi.Course(courseId);

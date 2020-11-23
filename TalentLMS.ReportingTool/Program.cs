@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using CommandLine;
 using TalentLMS.Api;
@@ -10,15 +11,10 @@ namespace TalentLMSReporting
     {
         static async Task<int> Main(string[] args)
         {
-            var exitCode = await Parser.Default.ParseArguments<CourseProgressOptions>(args)
+            var exitCode = await Parser.Default.ParseArguments<UsersOptions, CourseProgressOptions>(args)
                .MapResult(
-                    (CourseProgressOptions opts) =>
-                    {
-                        var api = new Api(opts.ServerUri, opts.ApiKey);
-                        var runner = new Runner(Console.Out, api.Courses);
-
-                        return runner.CourseProgress(opts.CourseId);
-                    },
+                    (CourseProgressOptions opts) => GetRunner(opts, Console.Out).CourseProgress(opts.CourseId),
+                    (UsersOptions opts) => GetRunner(opts, Console.Out).Users(),
                     Err);
 
             if (exitCode != ExitCode.Success)
@@ -33,6 +29,11 @@ namespace TalentLMSReporting
                 return Task.FromResult(ExitCode.GeneralError);
             }
 
+            static Runner GetRunner(BaseOptions opts, TextWriter stdout)
+            {
+                var api = new Api(opts.ServerUri, opts.ApiKey);
+                return new Runner(Console.Out, api.Courses, api.Users);
+            }
         }
     }
 
@@ -50,6 +51,11 @@ namespace TalentLMSReporting
     {
         [Option('c', "course-id", Required = true, HelpText = "Course ID for the course to display status for")]
         public string CourseId { get; init; }
+    }
+
+    [Verb("users", HelpText = "Users CSV.")]
+    public class UsersOptions : BaseOptions
+    {
     }
 
     public class ExitCode
