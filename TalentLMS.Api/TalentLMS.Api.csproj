@@ -5,7 +5,7 @@
 
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <PackageId>TalentLMS.Api</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <Description>Strongly-typed RESTful client for the TalentLMS API (https://www.talentlms.com).</Description>
     <Authors>Jon Fuller</Authors>
     <PackageTags>TalentLMS Talent LMS REST refit</PackageTags>
