@@ -25,10 +25,10 @@ namespace TalentLMSReporting
         {
             var course = await _coursesApi.Course(courseId);
             var courseUnits = course.Units
-               .Where(u => u.Type != "Section")
+               .Where(u => !u.IsSection)
                .ToList();
             var courseLearners = course.Users
-               .Where(u => u.Role == "learner")
+               .Where(u => u.IsLearner)
                .ToList();
 
             (await GetProgressByUser())
@@ -60,7 +60,7 @@ namespace TalentLMSReporting
                 return rows;
             }
 
-            static string CompletionStatus(UnitStatus status) => status.CompletionStatus switch
+            static string CompletionStatus(UserCourseStatus.Unit status) => status.CompletionStatus switch
             {
                 "Completed" => "+",
                 _ => ""

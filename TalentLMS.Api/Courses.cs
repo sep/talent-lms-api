@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Refit;
 using TalentLMS.Api.Courses;
 
@@ -18,11 +18,80 @@ namespace TalentLMS.Api
 
     namespace Courses
     {
-        public record Course(string Id, string Name, string Description, List<CourseUser> Users, List<CourseUnit> Units);
-        public record CourseUser(string Id, string Name, string Role, string Completion_Percentage);
-        public record CourseUnit(string Id, string Type, string Name, string Url);
+        public record Course(
+            string Id,
+            string Name,
+            string Code,
+            string CategoryId,
+            string Description,
+            string Price,
+            string Status,
+            DateTime CreationDate,
+            DateTime LastUpdateOn,
+            string CreatorId,
+            string HideFromCatalog,
+            string TimeLimit,
+            string Level,
+            string Shared,
+            string SharedUrl,
+            string Avatar,
+            string BigAvatar,
+            string Certification,
+            string CertificationDuration,
+            List<Course.User> Users,
+            List<Course.Unit> Units)
+        {
+            public record User(
+                string Id,
+                string Name,
+                string Role,
+                DateTime EnrolledOn,
+                string EnrolledOnTimestamp,
+                DateTime? CompletedOn,
+                string CompletedOnTimestamp,
+                string CompletionPercentage,
+                DateTime? ExpiredOn,
+                string ExpiredOnTimestamp,
+                string TotalTime)
+            {
+                public bool IsLearner => Role == "learner";
+            }
 
-        public record UserCourseStatus(string Role, string Completion_Percentage, string Completion_Status, List<UnitStatus> Units);
-        public record UnitStatus(string Id, string Name, string Type, [JsonProperty(PropertyName = "completion_status")] string CompletionStatus, string Completed_On, string Score, string Total_Time) { }
+            public record Unit(
+                string Id,
+                string Type,
+                string Name,
+                string DelayTime,
+                string AggregatedDelayTime,
+                string FormattedAggregatedDelayTime,
+                string Url)
+            {
+                public bool IsSection => Type == "Section";
+            }
+        }
+
+        public record UserCourseStatus(
+            string Role,
+            DateTime EnrolledOn,
+            string EnrolledOnTimestamp,
+            string CompletionStatus,
+            string CompletionPercentage,
+            DateTime? CompletedOn,
+            string CompletedOnTimestamp,
+            DateTime? ExpiredOn,
+            string ExpiredOnTimestamp,
+            string TotalTime,
+            List<UserCourseStatus.Unit> Units)
+        {
+            public record Unit(
+                string Id,
+                string Name,
+                string Type,
+                string CompletionStatus,
+                DateTime? CompletedOn,
+                string CompletedOnTimestamp,
+                string Score,
+                string TotalTime);
+        }
     }
 }

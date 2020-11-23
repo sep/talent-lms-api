@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Refit;
 
 namespace TalentLMS.Api
@@ -14,6 +16,14 @@ namespace TalentLMS.Api
         {
             _serverUrl = serverUrl;
             _refitSettings = new RefitSettings {
+                ContentSerializer = new NewtonsoftJsonContentSerializer(new JsonSerializerSettings
+                {
+                    ContractResolver = new DefaultContractResolver()
+                    {
+                        NamingStrategy = new SnakeCaseNamingStrategy()
+                    },
+                    DateFormatString = "dd/MM/yyyy, HH:mm:ss",
+                }),
                 AuthorizationHeaderValueGetter = () => Task.FromResult(AuthHeader(apiKey))
             };
         }
