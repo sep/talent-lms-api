@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ConsoleTables;
 using CsvHelper;
 using MoreLinq;
 using TalentLMS.Api;
@@ -15,12 +16,16 @@ namespace TalentLMSReporting
         private readonly TextWriter _stdOut;
         private readonly ICourses _coursesApi;
         private readonly IUsers _usersApi;
+        private readonly IGroups _groupsApi;
+        private readonly ISiteInfo _siteInfo;
 
-        public Runner(TextWriter stdOut, ICourses coursesApi, IUsers usersApi)
+        public Runner(TextWriter stdOut, ICourses coursesApi, IUsers usersApi, IGroups groupsApi, ISiteInfo siteInfo)
         {
             _stdOut = stdOut;
             _coursesApi = coursesApi;
             _usersApi = usersApi;
+            _groupsApi = groupsApi;
+            _siteInfo = siteInfo;
         }
 
         public async Task<ExitCode> Users()
@@ -92,6 +97,35 @@ namespace TalentLMSReporting
                         });
                 }
             }
+        }
+
+        public async Task<ExitCode> Groups()
+        {
+            var groups = await _groupsApi.All();
+
+            using (var csv = new CsvWriter(_stdOut, CultureInfo.CurrentUICulture))
+            {
+                csv.WriteHeader(groups.GetType().GetGenericArguments().Single());
+                await csv.WriteRecordsAsync(groups);
+            }
+            return ExitCode.Success;
+        }
+
+        public async Task<ExitCode> DomainDetails()
+        {
+            var domainDetails = (await _siteInfo.DomainDetails()).ToNamePairs();
+            var rateLimit = (await _siteInfo.RateLimit()).ToNamePairs();
+
+            ConsoleTable
+               .From(domainDetails.Concat(rateLimit))
+               .Configure(o =>
+                {
+                    o.OutputTo = _stdOut;
+                    o.EnableCount = false;
+                })
+               .Write();
+
+            return ExitCode.Success;
         }
     }
 }

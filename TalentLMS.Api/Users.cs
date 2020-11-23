@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Refit;
-using TalentLMS.Api.Users;
 
 namespace TalentLMS.Api
 {
@@ -10,10 +9,10 @@ namespace TalentLMS.Api
     public interface IUsers
     {
         [Get("/users")]
-        Task<List<User>> All();
+        Task<List<Users.BasicUser>> All();
 
         [Get("/users/id:{userId}")]
-        Task<User> User(string userId);
+        Task<Users.User> User(string userId);
     }
 
     namespace Users

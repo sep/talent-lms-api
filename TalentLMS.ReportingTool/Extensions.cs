@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TalentLMSReporting
 {
@@ -7,6 +9,13 @@ namespace TalentLMSReporting
         public static void Then<T>(this T target, Action<T> toPerform)
         {
             toPerform(target);
+        }
+
+        public static IEnumerable<KeyValuePair<string, object>> ToNamePairs<T>(this T target)
+        {
+            return target.GetType()
+               .GetProperties()
+               .Select(p => KeyValuePair.Create(p.Name, p.GetValue(target)));
         }
     }
 }

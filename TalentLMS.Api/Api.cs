@@ -28,9 +28,12 @@ namespace TalentLMS.Api
             };
         }
 
-        public ICourses Courses => RestService.For<ICourses>(_serverUrl, _refitSettings);
-        public IUsers Users => RestService.For<IUsers>(_serverUrl, _refitSettings);
+        public ICourses Courses => ApiFor<ICourses>();
+        public IUsers Users => ApiFor<IUsers>();
+        public IGroups Groups => ApiFor<IGroups>();
+        public ISiteInfo SiteInfo => ApiFor<ISiteInfo>();
 
+        TApiInterface ApiFor<TApiInterface>() => RestService.For<TApiInterface>(_serverUrl, _refitSettings);
         static string AuthHeader(string apiKey) => Base64($"{apiKey}:");
         static string Base64(string input) => Convert.ToBase64String(Encoding.UTF8.GetBytes(input));
     }

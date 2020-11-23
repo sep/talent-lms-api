@@ -11,10 +11,16 @@ namespace TalentLMSReporting
     {
         static async Task<int> Main(string[] args)
         {
-            var exitCode = await Parser.Default.ParseArguments<UsersOptions, CourseProgressOptions>(args)
+            var exitCode = await Parser.Default.ParseArguments<
+                    SiteInfoOptions,
+                    GroupsOptions,
+                    UsersOptions,
+                    CourseProgressOptions>(args)
                .MapResult(
                     (CourseProgressOptions opts) => GetRunner(opts, Console.Out).CourseProgress(opts.CourseId),
                     (UsersOptions opts) => GetRunner(opts, Console.Out).Users(),
+                    (GroupsOptions opts) => GetRunner(opts, Console.Out).Groups(),
+                    (SiteInfoOptions opts) => GetRunner(opts, Console.Out).DomainDetails(),
                     Err);
 
             if (exitCode != ExitCode.Success)
@@ -32,7 +38,7 @@ namespace TalentLMSReporting
             static Runner GetRunner(BaseOptions opts, TextWriter stdout)
             {
                 var api = new Api(opts.ServerUri, opts.ApiKey);
-                return new Runner(Console.Out, api.Courses, api.Users);
+                return new Runner(Console.Out, api.Courses, api.Users, api.Groups, api.SiteInfo);
             }
         }
     }
@@ -55,6 +61,16 @@ namespace TalentLMSReporting
 
     [Verb("users", HelpText = "Users CSV.")]
     public class UsersOptions : BaseOptions
+    {
+    }
+
+    [Verb("groups", HelpText = "Groups CSV.")]
+    public class GroupsOptions : BaseOptions
+    {
+    }
+
+    [Verb("site-info", HelpText = "Site Info CSV.")]
+    public class SiteInfoOptions : BaseOptions
     {
     }
 
