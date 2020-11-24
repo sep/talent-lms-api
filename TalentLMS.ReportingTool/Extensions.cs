@@ -11,6 +11,11 @@ namespace TalentLMSReporting
             toPerform(target);
         }
 
+        public static TReturn Then<T, TReturn>(this T target, Func<T, TReturn> toPerform)
+        {
+            return toPerform(target);
+        }
+
         public static IEnumerable<KeyValuePair<string, object>> ToNamePairs<T>(this T target)
         {
             return target.GetType()

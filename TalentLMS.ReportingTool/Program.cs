@@ -38,8 +38,9 @@ namespace TalentLMSReporting
             static Runner GetRunner(BaseOptions opts, TextWriter stdout)
             {
                 var api = new Api(opts.ServerUri, opts.ApiKey);
-                return new Runner(Console.Out, api.Courses, api.Users, api.Groups, api.SiteInfo);
+                return new Runner(api.Courses, api.Users, api.Groups, api.SiteInfo, opts.GetOutputMethod(Console.Out));
             }
+
         }
     }
 
@@ -50,6 +51,26 @@ namespace TalentLMSReporting
 
         [Option('s', "server-uri", Required = true, HelpText = "URI for TalentLMS API (e.g. example.talentlms.com/api/v1/)")]
         public string ServerUri { get; init; }
+
+        [Option('f', "output-format", Required = false, Default = OutputFormat.Console, HelpText = "URI for TalentLMS API (e.g. example.talentlms.com/api/v1/)")]
+        public OutputFormat OutputFormat { get; init; }
+
+        public IOutput GetOutputMethod(TextWriter stdOut) => OutputFormat switch
+        {
+            OutputFormat.Csv => new CsvOutput(stdOut),
+            OutputFormat.Console => new ConsoleTableOutput(o =>
+            {
+                o.OutputTo = Console.Out;
+                o.EnableCount = false;
+            }),
+            _ => throw new InvalidOperationException($"{OutputFormat} is not a supported output format.")
+        };
+    }
+
+    public enum OutputFormat
+    {
+        Csv,
+        Console
     }
 
     [Verb("course-progress", HelpText = "Course Status CSV.")]
