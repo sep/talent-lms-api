@@ -31,6 +31,7 @@ namespace TalentLMS.Api
         public ICourses Courses => ApiFor<ICourses>();
         public IUsers Users => ApiFor<IUsers>();
         public IGroups Groups => ApiFor<IGroups>();
+        public IUnits Units => ApiFor<IUnits>();
         public ISiteInfo SiteInfo => ApiFor<ISiteInfo>();
 
         TApiInterface ApiFor<TApiInterface>() => RestService.For<TApiInterface>(_serverUrl, _refitSettings);
