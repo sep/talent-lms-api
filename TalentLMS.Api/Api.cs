@@ -22,6 +22,7 @@ namespace TalentLMS.Api
                     {
                         NamingStrategy = new SnakeCaseNamingStrategy()
                     },
+                    // TODO: this format is part of the response from the SiteInfo API - we should use that value instead of hard-coding
                     DateFormatString = "dd/MM/yyyy, HH:mm:ss",
                 }),
                 AuthorizationHeaderValueGetter = () => Task.FromResult(AuthHeader(apiKey))

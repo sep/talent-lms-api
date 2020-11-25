@@ -33,6 +33,7 @@ namespace TalentLMSReporting
 
             return ExitCode.Success;
         }
+
         public async Task<ExitCode> CourseProgress(string courseId)
         {
             var course = await _coursesApi.Course(courseId);
