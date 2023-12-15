@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
 
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <PackageId>TalentLMS.Api</PackageId>
@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Refit" Version="5.2.1" />
+    <PackageReference Include="Refit" Version="7.0.0" />
   </ItemGroup>
 
 </Project>

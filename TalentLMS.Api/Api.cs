@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Refit;
 
 namespace TalentLMS.Api
@@ -10,22 +10,23 @@ namespace TalentLMS.Api
     public class Api
     {
         private readonly string _serverUrl;
+        private readonly string _apiKey;
         private readonly RefitSettings _refitSettings;
-
+        
         public Api(string serverUrl, string apiKey)
         {
             _serverUrl = serverUrl;
-            _refitSettings = new RefitSettings {
-                ContentSerializer = new NewtonsoftJsonContentSerializer(new JsonSerializerSettings
+            _apiKey = apiKey;
+            _refitSettings = new RefitSettings
+            {
+
+                ContentSerializer = new SystemTextJsonContentSerializer(new JsonSerializerOptions
                 {
-                    ContractResolver = new DefaultContractResolver()
-                    {
-                        NamingStrategy = new SnakeCaseNamingStrategy()
-                    },
+                    PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
                     // TODO: this format is part of the response from the SiteInfo API - we should use that value instead of hard-coding
-                    DateFormatString = "dd/MM/yyyy, HH:mm:ss",
+                    // Converters = { new DateTimeConverter("dd/MM/yyyy, HH:mm:ss") }
                 }),
-                AuthorizationHeaderValueGetter = () => Task.FromResult(AuthHeader(apiKey))
+                AuthorizationHeaderValueGetter = (rq,ct) => GetTokenAsync(apiKey)
             };
         }
 
@@ -35,8 +36,9 @@ namespace TalentLMS.Api
         public IUnits Units => ApiFor<IUnits>();
         public ISiteInfo SiteInfo => ApiFor<ISiteInfo>();
 
+        public async Task<string> GetTokenAsync(string apikey) => Base64($"{apikey}:");
+
         TApiInterface ApiFor<TApiInterface>() => RestService.For<TApiInterface>(_serverUrl, _refitSettings);
-        static string AuthHeader(string apiKey) => Base64($"{apiKey}:");
         static string Base64(string input) => Convert.ToBase64String(Encoding.UTF8.GetBytes(input));
     }
 }
