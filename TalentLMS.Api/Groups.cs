@@ -4,11 +4,10 @@ using Refit;
 
 namespace TalentLMS.Api
 {
-    [Headers("Authorization: Basic")]
-    public interface IGroups
+    public partial interface ITalentApi
     {
         [Get("/groups")]
-        Task<List<Groups.BasicGroup>> All();
+        Task<List<Groups.BasicGroup>> Groups();
 
         [Get("/groups/id:{groupId}")]
         Task<Groups.Group> Group(string groupId);

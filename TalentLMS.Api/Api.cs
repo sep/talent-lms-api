@@ -1,44 +1,59 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net.Http.Headers;
+using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Refit;
+using TalentLMS.Api.Courses;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace TalentLMS.Api
 {
-    public class Api
-    {
-        private readonly string _serverUrl;
-        private readonly string _apiKey;
-        private readonly RefitSettings _refitSettings;
-        
-        public Api(string serverUrl, string apiKey)
-        {
-            _serverUrl = serverUrl;
-            _apiKey = apiKey;
-            _refitSettings = new RefitSettings
-            {
 
-                ContentSerializer = new SystemTextJsonContentSerializer(new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
-                    // TODO: this format is part of the response from the SiteInfo API - we should use that value instead of hard-coding
-                    // Converters = { new DateTimeConverter("dd/MM/yyyy, HH:mm:ss") }
-                }),
-                AuthorizationHeaderValueGetter = (rq,ct) => GetTokenAsync(apiKey)
-            };
+    public partial interface ITalentApi
+    {
+       
+    }
+
+    public class TalentApi {
+
+        private readonly string _talentLmsApiRoot;
+        private readonly string _apiKey;
+
+        public TalentApi(string talentLmsApiRoot, string apiKey)
+        {
+            _talentLmsApiRoot = talentLmsApiRoot;
+            _apiKey = apiKey;
         }
 
-        public ICourses Courses => ApiFor<ICourses>();
-        public IUsers Users => ApiFor<IUsers>();
-        public IGroups Groups => ApiFor<IGroups>();
-        public IUnits Units => ApiFor<IUnits>();
-        public ISiteInfo SiteInfo => ApiFor<ISiteInfo>();
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddTransient(serviceProvider => new AuthHeaderHandler(_apiKey));
+            services.AddRefitClient<ITalentApi>().ConfigureHttpClient(services =>
+            {
+                services.BaseAddress = new Uri(_talentLmsApiRoot);
+            }).AddHttpMessageHandler<AuthHeaderHandler>();
 
-        public async Task<string> GetTokenAsync(string apikey) => Base64($"{apikey}:");
+        }
+    }
 
-        TApiInterface ApiFor<TApiInterface>() => RestService.For<TApiInterface>(_serverUrl, _refitSettings);
-        static string Base64(string input) => Convert.ToBase64String(Encoding.UTF8.GetBytes(input));
+    class AuthHeaderHandler : DelegatingHandler
+    {
+        private readonly string _apiKey;
+
+        public AuthHeaderHandler(string apiKey)
+        {
+            _apiKey = apiKey;
+        }
+
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            request.Headers.Authorization = new AuthenticationHeaderValue("Basic", _apiKey);
+
+            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        }
     }
 }

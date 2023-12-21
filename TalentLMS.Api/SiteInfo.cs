@@ -3,8 +3,7 @@ using Refit;
 
 namespace TalentLMS.Api
 {
-    [Headers("Authorization: Basic")]
-    public interface ISiteInfo
+    public partial interface ITalentApi
     {
         [Get("/siteinfo")]
         Task<SiteInfo.DomainDetails> DomainDetails();

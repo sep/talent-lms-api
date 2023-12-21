@@ -5,11 +5,11 @@ using Refit;
 
 namespace TalentLMS.Api
 {
-    [Headers("Authorization: Basic")]
-    public interface IUsers
+
+    public partial interface ITalentApi
     {
         [Get("/users")]
-        Task<List<Users.BasicUser>> All();
+        Task<List<Users.BasicUser>> Users();
 
         [Get("/users/id:{userId}")]
         Task<Users.User> User(string userId);

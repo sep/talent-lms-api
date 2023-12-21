@@ -6,7 +6,7 @@ using TalentLMS.Api.Units;
 
 namespace TalentLMS.Api
 {
-    public interface IUnits
+    public partial interface ITalentApi
     {
         [Get("/getuserprogressinunits/unit_id:{unitId}")]
         Task<IEnumerable<UserUnitProgress>> UserProgress(string unitId);

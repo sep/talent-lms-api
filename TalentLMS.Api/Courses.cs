@@ -6,14 +6,16 @@ using TalentLMS.Api.Courses;
 
 namespace TalentLMS.Api
 {
-    [Headers("Authorization: Basic")]
-    public interface ICourses
+    public partial interface ITalentApi
     {
         [Get("/getuserstatusincourse/user_id:{userId},course_id:{courseId}")]
         Task<UserCourseStatus> UserStatus(string userId, string courseId);
 
         [Get("/courses/id:{courseId}")]
         Task<Course> Course(string courseId);
+
+        [Get("/courses")]
+        Task<IEnumerable<Course>> Courses();
     }
 
     namespace Courses
