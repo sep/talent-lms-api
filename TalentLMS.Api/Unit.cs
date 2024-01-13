@@ -8,21 +8,21 @@ namespace TalentLMS.Api
 {
     public partial interface ITalentApi
     {
-        [Get("/getuserprogressinunits/unit_id:{unitId}")]
-        Task<IEnumerable<UserUnitProgress>> UserProgress(string unitId);
+        [Get("/getuserprogressinunits?unit_id={unitId}")]
+        Task<ApiResponse<IEnumerable<UserUnitProgress>>> UserProgress(string unitId);
 
-        [Get("/getuserprogressinunits/unit_id:{unitId},user_id:{userId}")]
-        Task<UserUnitProgress> UserProgress(string unitId, string userId);
+        [Get("/getuserprogressinunits?unit_id={unitId},user_id={userId}")]
+        Task<ApiResponse<UserUnitProgress>> UserProgress(string unitId, string userId);
 
-        [Get("/gettestanswers/test_id:{testId},user_id:{userId}")]
-        Task<TestResult> TestAnswers(string testId, string userId);
+        [Get("/gettestanswers?test_id={testId},user_id={userId}")]
+        Task<ApiResponse<TestResult>> TestAnswers(string testId, string userId);
 
-        [Get("/getsurveyanswers/survey_id:{surveyId},user_id:{userId}")]
-        Task<SurveyResult> SurveyAnswers(string surveyId, string userId);
+        [Get("/getsurveyanswers?survey_id={surveyId},user_id={userId}")]
+        Task<ApiResponse<SurveyResult>> SurveyAnswers(string surveyId, string userId);
 
 
-        [Get("/getiltsessions/ilt_id:{iltId}")]
-        Task<List<IltSession>> IltSessions(string iltId);
+        [Get("/getiltsessions?ilt_id={iltId}")]
+        Task<ApiResponse<List<IltSession>>> IltSessions(string iltId);
     }
 
     namespace Units

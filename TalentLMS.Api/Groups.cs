@@ -7,10 +7,10 @@ namespace TalentLMS.Api
     public partial interface ITalentApi
     {
         [Get("/groups")]
-        Task<List<Groups.BasicGroup>> Groups();
+        Task<ApiResponse<List<Groups.BasicGroup>>> Groups();
 
-        [Get("/groups/id:{groupId}")]
-        Task<Groups.Group> Group(string groupId);
+        [Get("/groups?id={groupId}")]
+        Task<ApiResponse<Groups.Group>> Group(string groupId);
     }
 
     namespace Groups

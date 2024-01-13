@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Refit;
 using TalentLMS.Api.Courses;
@@ -9,17 +10,28 @@ namespace TalentLMS.Api
     public partial interface ITalentApi
     {
         [Get("/getuserstatusincourse/user_id:{userId},course_id:{courseId}")]
-        Task<UserCourseStatus> UserStatus(string userId, string courseId);
+        Task<ApiResponse<UserCourseStatus>> UserStatus(string userId, string courseId);
 
         [Get("/courses/id:{courseId}")]
-        Task<Course> Course(string courseId);
+        Task<ApiResponse<Course>> Course(string courseId);
 
         [Get("/courses")]
-        Task<IEnumerable<Course>> Courses();
+        Task<ApiResponse<IEnumerable<Course>>> Courses();
+
+        [Post("/addusertocourse")]
+        Task<ApiResponse<List<UserCourse>>> AddUserToCourse([Body] UserCourse data);
     }
 
     namespace Courses
     {
+
+        public record UserCourse(
+            string user_id,
+            string course_id,
+            string role
+            );
+
+
         public record Course(
             string Id,
             string Name,

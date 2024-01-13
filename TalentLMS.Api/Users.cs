@@ -9,19 +9,33 @@ namespace TalentLMS.Api
     public partial interface ITalentApi
     {
         [Get("/users")]
-        Task<List<Users.BasicUser>> Users();
+        Task<ApiResponse<List<Users.BasicUser>>> Users();
 
-        [Get("/users/id:{userId}")]
-        Task<Users.User> User(string userId);
+        [Get("/users?id={userId}")]
+        Task<ApiResponse<Users.User>> User(string userId);
+
+        [Get("/users?email={userEmail}")]
+        Task<ApiResponse<Users.User>> UserByEmail(string userEmail);
+
+        [Post("/usersignup")]
+        Task<ApiResponse<Users.BasicUser>> UserSignup([Body] Users.NewUser data);
     }
 
     namespace Users
     {
+        public record NewUser(
+          string first_name,
+          string last_name,
+          string email,
+          string login,
+          string password
+        );
+
         public record BasicUser(
-            string Id,
+            int Id,
             string Login,
-            string FirstName,
-            string LastName,
+            string First_Name,
+            string Last_Name,
             string Email,
             string RestrictEmail,
             string UserType,
@@ -30,7 +44,7 @@ namespace TalentLMS.Api
             string Status,
             DateTime? DeactivationDate,
             string Level,
-            int Points,
+            string Points,
             DateTime CreatedOn,
             DateTime LastUpdated,
             string LastUpdatedTimestamp,
@@ -51,7 +65,7 @@ namespace TalentLMS.Api
             string Status,
             DateTime? DeactivationDate,
             string Level,
-            int Points,
+            string Points,
             DateTime CreatedOn,
             DateTime LastUpdated,
             string LastUpdatedTimestamp,

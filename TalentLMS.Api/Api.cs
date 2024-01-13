@@ -15,7 +15,7 @@ namespace TalentLMS.Api
 
     public partial interface ITalentApi
     {
-       
+        HttpClient Client { get; }  // refit magic
     }
 
     public class TalentApi {
