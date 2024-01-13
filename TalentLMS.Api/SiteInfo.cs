@@ -6,10 +6,10 @@ namespace TalentLMS.Api
     public partial interface ITalentApi
     {
         [Get("/siteinfo")]
-        Task<SiteInfo.DomainDetails> DomainDetails();
+        Task<ApiResponse<SiteInfo.DomainDetails>> DomainDetails();
 
         [Get("/ratelimit")]
-        Task <SiteInfo.RateLimit> RateLimit();
+        Task<ApiResponse<SiteInfo.RateLimit>> RateLimit();
     }
 
     namespace SiteInfo

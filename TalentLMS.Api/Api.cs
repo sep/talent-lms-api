@@ -15,7 +15,7 @@ namespace TalentLMS.Api
 
     public partial interface ITalentApi
     {
-       
+        HttpClient Client { get; }  // refit magic
     }
 
     public class TalentApi {
@@ -27,6 +27,30 @@ namespace TalentLMS.Api
         {
             _talentLmsApiRoot = talentLmsApiRoot;
             _apiKey = apiKey;
+        }
+
+
+        public ITalentApi TestClient()
+        {
+            //var httpClient = new HttpClient(new AuthHeaderHandler(_apiKey))
+            //{
+            //    BaseAddress = new Uri(_talentLmsApiRoot),
+            //};
+
+            var handler = new HttpClientHandler();
+
+            var handler2 = new AuthHeaderHandler(_apiKey);
+
+            var basicAuthHeader = new AuthenticationHeaderValue("Basic", _apiKey);
+
+            var settings = new RefitSettings()
+            {
+                HttpMessageHandlerFactory = () => handler,
+                AuthorizationHeaderValueGetter = (_, __) => Task.FromResult(basicAuthHeader.ToString())
+            };
+            var client = RestService.For<ITalentApi>(_talentLmsApiRoot, settings);
+           
+            return client;
         }
 
         public void ConfigureServices(IServiceCollection services)
