@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Refit;
 using TalentLMS.Api.Courses;
@@ -18,7 +19,7 @@ namespace TalentLMS.Api
         Task<ApiResponse<IEnumerable<Course>>> Courses();
 
         [Post("/addusertocourse")]
-        Task<ApiResponse<UserCourse>> AddUserToCourse([Body] Courses.UserCourse data);
+        Task<ApiResponse<List<UserCourse>>> AddUserToCourse([Body] UserCourse data);
     }
 
     namespace Courses
