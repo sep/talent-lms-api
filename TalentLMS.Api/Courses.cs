@@ -9,10 +9,10 @@ namespace TalentLMS.Api
 {
     public partial interface ITalentApi
     {
-        [Get("/getuserstatusincourse/user_id:{userId},course_id:{courseId}")]
+        [Get("/getuserstatusincourse?user_id={userId}&course_id={courseId}")]
         Task<ApiResponse<UserCourseStatus>> UserStatus(string userId, string courseId);
 
-        [Get("/courses/id:{courseId}")]
+        [Get("/courses?id={courseId}")]
         Task<ApiResponse<Course>> Course(string courseId);
 
         [Get("/courses")]
