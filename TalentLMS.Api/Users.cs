@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Refit;
+using static TalentLMS.Api.Users.User;
 
 namespace TalentLMS.Api
 {
@@ -19,6 +20,9 @@ namespace TalentLMS.Api
 
         [Post("/usersignup")]
         Task<ApiResponse<Users.BasicUser>> UserSignup([Body] Users.NewUser data);
+
+        [Get("/addusertobranch?user_id={userId},branch_id={branchId}")]
+        Task<ApiResponse<UserBranch>> AddUserToBranch(string userId, string branchId);
     }
 
     namespace Users
@@ -113,6 +117,12 @@ namespace TalentLMS.Api
                 string Criteria,
                 DateTime IssuedOn,
                 string BadgeSetId);
+
+            public record UserBranch(
+               string user_id,
+               string branch_id,
+               string branch_name
+                );
         }
     }
 }
